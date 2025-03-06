@@ -1,0 +1,9 @@
+.tweet-list {
+    border-top: 1px solid #ebeef0;
+  }
+  
+  .empty-tweets {
+    padding: 30px;
+    text-align: center;
+    color: #536471;
+  }
