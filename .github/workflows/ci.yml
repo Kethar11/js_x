@@ -24,11 +24,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-<<<<<<< HEAD
         npm install
-=======
-        npm ci
->>>>>>> 25508ecf4df8c354434212a3636b9758fc2d187c
         npm install react-router-dom@7.3.0
       
     - name: Run linter
