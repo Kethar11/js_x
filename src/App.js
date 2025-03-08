@@ -14,7 +14,7 @@ function App() {
         {/* <Header /> */}
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />  {/* ✅ Uncommented */}
             <Route path="/signup" element={<Signup />} />  {/* ✅ Uncommented */}
           </Routes>
