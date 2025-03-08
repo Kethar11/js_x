@@ -1,11 +1,127 @@
-.home-page {
-    display: flex;
-    flex-direction: column;
+.home-container {
+    width: 100%;
+  }
+  
+  .home-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    max-width: 1280px;
+    margin: 0 auto;
     gap: 20px;
   }
   
-  .tweet-feed {
-    border: 1px solid #e1e8ed;
-    border-radius: 8px;
+  .main-content {
+    border-left: 1px solid #ebeef0;
+    border-right: 1px solid #ebeef0;
+    min-height: 100vh;
+  }
+  
+  .timeline-header {
     padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #ebeef0;
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .loading {
+    padding: 20px;
+    text-align: center;
+    color: #536471;
+  }
+  
+  .error {
+    padding: 20px;
+    text-align: center;
+    color: #e0245e;
+  }
+  
+  .trends-section {
+    padding: 0 15px;
+  }
+  
+  .trends-container, .who-to-follow {
+    background-color: #f7f9fa;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    padding: 15px;
+  }
+  
+  .trends-container h3, .who-to-follow h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .trend-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #ebeef0;
+  }
+  
+  .trend-category, .tweet-count {
+    font-size: 13px;
+    color: #536471;
+  }
+  
+  .trend-name {
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  
+  .follow-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #ebeef0;
+  }
+  
+  .user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .user-info {
+    flex-grow: 1;
+  }
+  
+  .user-name {
+    font-weight: bold;
+  }
+  
+  .user-handle {
+    font-size: 13px;
+    color: #536471;
+  }
+  
+  .follow-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 1024px) {
+    .home-layout {
+      grid-template-columns: 1fr 2fr;
+    }
+    .trends-section {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .home-layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      display: none;
+    }
   }
