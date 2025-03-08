@@ -1,75 +1,181 @@
 .tweet-form-container {
-    display: flex;
-    padding: 15px;
-    border-bottom: 1px solid #ebeef0;
-  }
-  
-  .tweet-form-avatar {
-    margin-right: 12px;
-  }
-  
-  .tweet-form-avatar img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-  }
-  
-  .tweet-form-content {
-    flex: 1;
-  }
-  
-  .tweet-input {
-    width: 100%;
-    border: none;
-    resize: none;
-    font-size: 18px;
-    font-family: inherit;
-    height: 80px;
-    margin-bottom: 10px;
-    outline: none;
-  }
-  
-  .tweet-form-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #ebeef0;
-    padding-top: 10px;
-  }
-  
-  .tweet-form-actions {
-    display: flex;
-  }
-  
-  .tweet-action-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: none;
-    background-color: transparent;
-    color: #1da1f2;
-    cursor: pointer;
-    margin-right: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .tweet-action-btn:hover {
-    background-color: rgba(29, 161, 242, 0.1);
-  }
-  
-  .tweet-submit-btn {
-    background-color: #1da1f2;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-weight: bold;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
-  .tweet-submit-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid #ebeef0;
+}
+
+.tweet-form-avatar {
+  margin-right: 12px;
+}
+
+.tweet-form-avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tweet-form-content {
+  flex: 1;
+}
+
+.replying-to {
+  color: #536471;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.reply-username {
+  color: #1da1f2;
+}
+
+.tweet-input {
+  width: 100%;
+  border: none;
+  resize: none;
+  font-size: 18px;
+  font-family: inherit;
+  min-height: 80px;
+  margin-bottom: 10px;
+  outline: none;
+  padding: 10px 0;
+}
+
+.tweet-form-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.media-preview {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.media-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-media-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tweet-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ebeef0;
+  padding-top: 10px;
+}
+
+.tweet-form-actions {
+  display: flex;
+}
+
+.tweet-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  color: #1da1f2;
+  cursor: pointer;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.tweet-action-btn:hover {
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.tweet-form-submit {
+  display: flex;
+  align-items: center;
+}
+
+.chars-remaining {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #536471;
+}
+
+.chars-remaining.limit-reached {
+  color: #e0245e;
+}
+
+.tweet-submit-btn {
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tweet-submit-btn:hover {
+  background-color: #1a91da;
+}
+
+.tweet-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-to-tweet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  color: #536471;
+  font-size: 16px;
+}
+
+.login-to-tweet a {
+  color: #1da1f2;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.login-to-tweet a:hover {
+  text-decoration: underline;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #ebeef0;
+  border-top: 3px solid #1da1f2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

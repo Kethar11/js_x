@@ -1,127 +1,208 @@
 .home-container {
-    width: 100%;
-  }
-  
+  width: 100%;
+}
+
+.home-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.main-content {
+  border-left: 1px solid #ebeef0;
+  border-right: 1px solid #ebeef0;
+  min-height: 100vh;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #ebeef0;
+}
+
+.timeline-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.refresh-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.refresh-btn:hover {
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-prompt {
+  padding: 30px;
+  text-align: center;
+  border-bottom: 1px solid #ebeef0;
+}
+
+.login-prompt h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.login-prompt p {
+  color: #536471;
+  margin-bottom: 20px;
+}
+
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.login-btn, .signup-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.login-btn {
+  background-color: #1da1f2;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #1a91da;
+}
+
+.signup-btn {
+  background-color: transparent;
+  color: #1da1f2;
+  border: 1px solid #1da1f2;
+}
+
+.signup-btn:hover {
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.trends-section {
+  padding: 0 15px;
+}
+
+.trends-container, .who-to-follow {
+  background-color: #f7f9fa;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  padding: 15px;
+}
+
+.trends-container h3, .who-to-follow h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.trend-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ebeef0;
+}
+
+.trend-item:last-child {
+  border-bottom: none;
+}
+
+.trend-category, .tweet-count {
+  font-size: 13px;
+  color: #536471;
+}
+
+.trend-name {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ebeef0;
+}
+
+.follow-item:last-child {
+  border-bottom: none;
+}
+
+.user-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.user-handle {
+  font-size: 13px;
+  color: #536471;
+}
+
+.follow-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.follow-button:hover {
+  background-color: #333;
+}
+
+@media (max-width: 1024px) {
   .home-layout {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    max-width: 1280px;
-    margin: 0 auto;
-    gap: 20px;
+    grid-template-columns: 1fr 2fr;
   }
-  
-  .main-content {
-    border-left: 1px solid #ebeef0;
-    border-right: 1px solid #ebeef0;
-    min-height: 100vh;
-  }
-  
-  .timeline-header {
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid #ebeef0;
-    position: sticky;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-  }
-  
-  .loading {
-    padding: 20px;
-    text-align: center;
-    color: #536471;
-  }
-  
-  .error {
-    padding: 20px;
-    text-align: center;
-    color: #e0245e;
-  }
-  
   .trends-section {
-    padding: 0 15px;
+    display: none;
   }
-  
-  .trends-container, .who-to-follow {
-    background-color: #f7f9fa;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .home-layout {
+    grid-template-columns: 1fr;
   }
-  
-  .trends-container h3, .who-to-follow h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
+  .sidebar {
+    display: none;
   }
-  
-  .trend-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #ebeef0;
-  }
-  
-  .trend-category, .tweet-count {
-    font-size: 13px;
-    color: #536471;
-  }
-  
-  .trend-name {
-    font-weight: bold;
-    margin: 5px 0;
-  }
-  
-  .follow-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #ebeef0;
-  }
-  
-  .user-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .user-info {
-    flex-grow: 1;
-  }
-  
-  .user-name {
-    font-weight: bold;
-  }
-  
-  .user-handle {
-    font-size: 13px;
-    color: #536471;
-  }
-  
-  .follow-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  @media (max-width: 1024px) {
-    .home-layout {
-      grid-template-columns: 1fr 2fr;
-    }
-    .trends-section {
-      display: none;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .home-layout {
-      grid-template-columns: 1fr;
-    }
-    .sidebar {
-      display: none;
-    }
-  }
+}

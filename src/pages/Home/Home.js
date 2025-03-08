@@ -1,74 +1,67 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTweets } from '../../redux/slices/tweetSlice';
+import { selectIsAuthenticated } from '../../redux/slices/authSlice';
 import TweetForm from '../../components/features/TweetForm/TweetForm';
 import TweetList from '../../components/features/TweetList/TweetList';
-import Sidebar from '../../components/layout/Sidebar/Sidebar';
+import Layout from '../../components/layout/Layout';
 import './Home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const { items: tweets, isLoading, error } = useSelector(state => state.tweets);
   
+  // Fetch tweets when component mounts
   useEffect(() => {
-    dispatch(fetchTweets());
-  }, [dispatch]);
+    if (isAuthenticated) {
+      dispatch(fetchTweets());
+    }
+  }, [dispatch, isAuthenticated]);
+  
+  // Refresh tweets function
+  const refreshTweets = () => {
+    if (isAuthenticated) {
+      dispatch(fetchTweets());
+    }
+  };
   
   return (
-    <div className="home-container">
-      <div className="home-layout">
-        <Sidebar />
-        <div className="main-content">
-          <h2 className="timeline-header">Home</h2>
-          <TweetForm />
-          
-          {isLoading && <div className="loading">Loading tweets...</div>}
-          {error && <div className="error">Error: {error}</div>}
-          
-          <TweetList tweets={tweets} />
+    <Layout>
+      <div className="main-content">
+        <div className="timeline-header">
+          <h2>Home</h2>
+          {isAuthenticated && (
+            <button 
+              onClick={refreshTweets} 
+              className="refresh-btn"
+              disabled={isLoading}
+            >
+              🔄
+            </button>
+          )}
         </div>
-        <div className="trends-section">
-          <div className="trends-container">
-            <h3>What's happening</h3>
-            <div className="trend-item">
-              <div className="trend-category">Technology · Trending</div>
-              <div className="trend-name">#ReactJS</div>
-              <div className="tweet-count">5,241 Tweets</div>
-            </div>
-            <div className="trend-item">
-              <div className="trend-category">Sports · Trending</div>
-              <div className="trend-name">Premier League</div>
-              <div className="tweet-count">34.2K Tweets</div>
-            </div>
-            <div className="trend-item">
-              <div className="trend-category">Business · Trending</div>
-              <div className="trend-name">#TechStartup</div>
-              <div className="tweet-count">12.8K Tweets</div>
+        
+        <TweetForm onSuccess={refreshTweets} />
+        
+        {!isAuthenticated ? (
+          <div className="login-prompt">
+            <h3>Welcome to X Clone</h3>
+            <p>Log in to see your timeline and start tweeting.</p>
+            <div className="auth-buttons">
+              <a href="/login" className="login-btn">Log in</a>
+              <a href="/signup" className="signup-btn">Sign up</a>
             </div>
           </div>
-          
-          <div className="who-to-follow">
-            <h3>Who to follow</h3>
-            <div className="follow-item">
-              <img src="https://via.placeholder.com/40" alt="User" className="user-img" />
-              <div className="user-info">
-                <div className="user-name">Tech News</div>
-                <div className="user-handle">@technews</div>
-              </div>
-              <button className="follow-button">Follow</button>
-            </div>
-            <div className="follow-item">
-              <img src="https://via.placeholder.com/40" alt="User" className="user-img" />
-              <div className="user-info">
-                <div className="user-name">React Community</div>
-                <div className="user-handle">@reactjs</div>
-              </div>
-              <button className="follow-button">Follow</button>
-            </div>
-          </div>
-        </div>
+        ) : (
+          <TweetList 
+            tweets={tweets} 
+            isLoading={isLoading}
+            error={error}
+          />
+        )}
       </div>
-    </div>
+    </Layout>
   );
 };
 
