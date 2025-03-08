@@ -1,8 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Tweet from '../Tweet/Tweet';
 import './TweetList.css';
 
-const TweetList = ({ tweets = [], isLoading = false, error = null }) => {
+const TweetList = ({ tweets = [], isLoading = false, error = null, emptyMessage }) => {
+  const currentUser = useSelector(state => state.auth.user);
+  
   // Loading state
   if (isLoading) {
     return (
@@ -18,16 +21,21 @@ const TweetList = ({ tweets = [], isLoading = false, error = null }) => {
     return (
       <div className="error-loading-tweets">
         <p>Error loading tweets: {error}</p>
-        <button className="retry-button">Retry</button>
+        <button 
+          className="retry-button"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
       </div>
     );
   }
   
   // Empty state
-  if (tweets.length === 0) {
+  if (!tweets || tweets.length === 0) {
     return (
       <div className="empty-tweets">
-        <p>No tweets yet. Be the first to tweet!</p>
+        <p>{emptyMessage || "No tweets yet."}</p>
       </div>
     );
   }
@@ -36,7 +44,11 @@ const TweetList = ({ tweets = [], isLoading = false, error = null }) => {
   return (
     <div className="tweet-list">
       {tweets.map((tweet) => (
-        <Tweet key={tweet._id || tweet.id} tweet={tweet} />
+        <Tweet 
+          key={tweet._id || tweet.id} 
+          tweet={tweet} 
+          currentUser={currentUser}
+        />
       ))}
     </div>
   );

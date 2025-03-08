@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, selectIsAuthenticated, selectUser } from '../../../redux/slices/authSlice';
@@ -10,16 +10,19 @@ const Header = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const currentUser = useSelector(selectUser);
+  const dropdownRef = useRef(null);
   
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   
   // Handle logout
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
+    setShowUserMenu(false);
   };
   
   // Handle search
@@ -54,6 +57,33 @@ const Header = () => {
     setSearchQuery('');
   };
   
+  // Toggle user menu dropdown
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
+  };
+  
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+    
+    if (showUserMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserMenu]);
+  
+  // Close search results when clicking outside
+  const handleBlur = () => {
+    setTimeout(() => setShowSearchResults(false), 200);
+  };
+  
   return (
     <header className="main-header">
       <div className="header-container">
@@ -73,7 +103,7 @@ const Header = () => {
               value={searchQuery}
               onChange={handleSearch}
               onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
-              onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+              onBlur={handleBlur}
             />
             {isSearching && <div className="search-loading">Searching...</div>}
             
@@ -103,26 +133,35 @@ const Header = () => {
         
         <div className="header-right">
           {isAuthenticated ? (
-            <div className="user-menu">
-              <div className="user-avatar">
+            <div className="user-menu" ref={dropdownRef}>
+              <div 
+                className="user-avatar"
+                onClick={toggleUserMenu}
+              >
                 <img 
                   src={currentUser?.profilePicture || "https://via.placeholder.com/40"} 
                   alt="User avatar"
                 />
               </div>
-              <div className="user-menu-dropdown">
-                <div className="user-info">
-                  <div className="user-name">{currentUser?.name || currentUser?.username}</div>
-                  <div className="user-username">@{currentUser?.username}</div>
+              {showUserMenu && (
+                <div className="user-menu-dropdown">
+                  <div className="user-info">
+                    <div className="user-name">{currentUser?.name || currentUser?.username}</div>
+                    <div className="user-username">@{currentUser?.username}</div>
+                  </div>
+                  <Link 
+                    to={`/profile/${currentUser?.username}`} 
+                    className="dropdown-item"
+                    onClick={() => setShowUserMenu(false)}
+                  >
+                    Profile
+                  </Link>
+                  <div className="dropdown-divider"></div>
+                  <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                    Log out
+                  </button>
                 </div>
-                <Link to={`/profile/${currentUser?.username}`} className="dropdown-item">
-                  Profile
-                </Link>
-                <div className="dropdown-divider"></div>
-                <button className="dropdown-item logout-btn" onClick={handleLogout}>
-                  Log out
-                </button>
-              </div>
+              )}
             </div>
           ) : (
             <div className="auth-buttons">

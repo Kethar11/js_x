@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTweet } from '../../../redux/slices/tweetSlice';
 import { selectUser, selectIsAuthenticated } from '../../../redux/slices/authSlice';
+import EmojiPicker from 'emoji-picker-react';
 import './TweetForm.css';
 
 const TweetForm = ({ replyTo, quoteTweet, onSuccess }) => {
   const [content, setContent] = useState('');
   const [media, setMedia] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [remainingChars, setRemainingChars] = useState(280);
-  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
   
+  const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   
@@ -72,13 +75,53 @@ const TweetForm = ({ replyTo, quoteTweet, onSuccess }) => {
     }
   };
   
-  // Handle media upload (simplified version - real implementation would use a file upload)
-  const handleMediaUpload = () => {
-    // Simplified media upload - in a real app, this would connect to a file upload API
-    const mockMediaUrl = prompt('Enter media URL (for demo purposes):');
-    if (mockMediaUrl) {
-      setMedia([...media, mockMediaUrl]);
+  // Handle file upload button click
+  const handleFileButtonClick = () => {
+    fileInputRef.current.click();
+  };
+  
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    // Process each file and convert to data URL for preview
+    files.forEach(file => {
+      if (file.size > 5 * 1024 * 1024) { // Limit file size to 5MB
+        alert("File size should not exceed 5MB.");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMedia(prevMedia => [...prevMedia, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    // Reset file input
+    e.target.value = '';
+  };
+  
+  // Handle GIF selection (mock implementation)
+  const handleGifSelect = () => {
+    // In a real implementation, this would open a GIF search modal
+    const mockGifUrl = prompt('Enter GIF URL (for demo purposes):');
+    if (mockGifUrl) {
+      setMedia([...media, mockGifUrl]);
     }
+  };
+  
+  // Handle emoji selection
+  const handleEmojiClick = (emojiData) => {
+    setContent(prevContent => prevContent + emojiData.emoji);
+    setRemainingChars(prevRemainingChars => prevRemainingChars - 1);
+    setShowEmojiPicker(false);
+  };
+  
+  // Toggle emoji picker
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker(!showEmojiPicker);
   };
   
   // Remove a media item
@@ -94,7 +137,7 @@ const TweetForm = ({ replyTo, quoteTweet, onSuccess }) => {
         <>
           <div className="tweet-form-avatar">
             <img 
-              src={currentUser?.profilePicture || "https://via.placeholder.com/50"} 
+              src={currentUser?.profilePicture || "/default-avatar.png"} 
               alt="User avatar" 
             />
           </div>
@@ -120,7 +163,13 @@ const TweetForm = ({ replyTo, quoteTweet, onSuccess }) => {
                 <div className="tweet-form-media">
                   {media.map((url, index) => (
                     <div key={index} className="media-preview">
-                      <img src={url} alt="Media preview" />
+                      {url.startsWith('data:image') || url.match(/\.(jpeg|jpg|png|gif)$/i) ? (
+                        <img src={url} alt="Media preview" />
+                      ) : url.match(/\.(mp4|webm|ogg)$/i) ? (
+                        <video src={url} controls={false} muted loop />
+                      ) : (
+                        <div className="media-fallback">Media</div>
+                      )}
                       <button 
                         type="button" 
                         className="remove-media-btn" 
@@ -133,24 +182,69 @@ const TweetForm = ({ replyTo, quoteTweet, onSuccess }) => {
                 </div>
               )}
               
+              {/* Hidden file input */}
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*,video/*"
+                multiple
+                hidden
+              />
+              
               <div className="tweet-form-footer">
                 <div className="tweet-form-actions">
+                  {/* Image upload button */}
                   <button 
                     type="button" 
                     className="tweet-action-btn"
-                    onClick={handleMediaUpload}
+                    onClick={handleFileButtonClick}
+                    title="Add photo or video"
                   >
                     <i className="icon-image">📷</i>
                   </button>
-                  <button type="button" className="tweet-action-btn">
+                  
+                  {/* GIF button */}
+                  <button 
+                    type="button" 
+                    className="tweet-action-btn"
+                    onClick={handleGifSelect}
+                    title="Add GIF"
+                  >
                     <i className="icon-gif">GIF</i>
                   </button>
-                  <button type="button" className="tweet-action-btn">
+                  
+                  {/* Poll button */}
+                  <button 
+                    type="button" 
+                    className="tweet-action-btn"
+                    title="Add poll"
+                  >
                     <i className="icon-poll">📊</i>
                   </button>
-                  <button type="button" className="tweet-action-btn">
+                  
+                  {/* Emoji button */}
+                  <button 
+                    type="button" 
+                    className="tweet-action-btn"
+                    onClick={toggleEmojiPicker}
+                    title="Add emoji"
+                  >
                     <i className="icon-emoji">😊</i>
                   </button>
+                  
+                  {/* Emoji picker */}
+                  {showEmojiPicker && (
+                    <div className="emoji-picker-container">
+                      <EmojiPicker
+                        onEmojiClick={handleEmojiClick}
+                        disableAutoFocus={true}
+                        previewConfig={{
+                          showPreview: false
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="tweet-form-submit">

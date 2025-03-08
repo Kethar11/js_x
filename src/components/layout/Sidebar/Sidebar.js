@@ -4,14 +4,28 @@ import { useSelector } from 'react-redux';
 import { selectUser, selectIsAuthenticated } from '../../../redux/slices/authSlice';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ onTweetClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentUser = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
+  // Navigation items
+  const navItems = [
+    { path: '/home', icon: '🏠', text: 'Home' },
+    { path: '/explore', icon: '🔍', text: 'Explore' },
+    { path: '/lists', icon: '📋', text: 'Lists' },
+    // User profile item is added conditionally below
+  ];
+
   // Determine if a link is active
   const isActive = (path) => {
+    if (path === '/home' && (location.pathname === '/' || location.pathname === '/home')) {
+      return true;
+    }
+    if (path.includes('/profile') && location.pathname.includes('/profile')) {
+      return true;
+    }
     return location.pathname === path;
   };
 
@@ -19,63 +33,72 @@ const Sidebar = () => {
   const handleTweetClick = () => {
     if (!isAuthenticated) {
       navigate('/login');
-    } else {
-      // Scroll to tweet form or open tweet modal
-      const tweetForm = document.querySelector('.tweet-form-container');
-      if (tweetForm) {
-        tweetForm.scrollIntoView({ behavior: 'smooth' });
-        const textarea = tweetForm.querySelector('textarea');
-        if (textarea) {
-          textarea.focus();
-        }
-      }
+    } else if (onTweetClick) {
+      onTweetClick();
     }
   };
 
   return (
     <div className="sidebar">
-      <div className="sidebar-fixed">
-        <div className="logo">
-          <Link to="/home">X</Link>
-        </div>
+      <div className="sidebar-container">
         
-        {/* Main Navigation */}
+        
         <nav className="sidebar-nav">
-          <Link to="/home" className={`nav-item ${isActive('/home') ? 'active' : ''}`}>
-            <i className="icon-home">🏠</i>
-            <span className="nav-text">Home</span>
-          </Link>
-          
-          <Link to="/bookmarks" className={`nav-item ${isActive('/bookmarks') ? 'active' : ''}`}>
-            <i className="icon-bookmarks">🔖</i>
-            <span className="nav-text">Bookmarks</span>
-          </Link>
-          
-          <Link to="/lists" className={`nav-item ${isActive('/lists') ? 'active' : ''}`}>
-            <i className="icon-lists">📋</i>
-            <span className="nav-text">Lists</span>
-          </Link>
-          
-          {isAuthenticated && currentUser && (
-            <Link 
-              to={`/profile/${currentUser.username}`} 
-              className={`nav-item ${location.pathname.includes('/profile/') ? 'active' : ''}`}
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`nav-item ${isActive(item.path) ? 'active' : ''}`}
+              aria-label={item.text}
             >
-              <i className="icon-profile">👤</i>
+              <div className="nav-icon">{item.icon}</div>
+              <span className="nav-text">{item.text}</span>
+            </Link>
+          ))}
+          
+          {/* Profile link - only shown when logged in */}
+          {isAuthenticated && currentUser && (
+            <Link
+              to={`/profile/${currentUser.username}`}
+              className={`nav-item ${isActive(`/profile/${currentUser.username}`) ? 'active' : ''}`}
+              aria-label="Profile"
+            >
+              <div className="nav-icon">👤</div>
               <span className="nav-text">Profile</span>
             </Link>
           )}
           
-          <div className="nav-item more-item">
-            <i className="icon-more">⋯</i>
+          <button className="nav-item more-menu" aria-label="More">
+            <div className="nav-icon">⋯</div>
             <span className="nav-text">More</span>
-          </div>
+          </button>
         </nav>
         
-        {/* Tweet Button */}
-        <button className="tweet-button" onClick={handleTweetClick}>
-          <span className="tweet-text">Tweet</span>
+        {/* Tweet button */}
+        <button 
+          className="sidebar-tweet-btn" 
+          onClick={handleTweetClick}
+          aria-label="Compose Tweet"
+        >
+          <span className="tweet-btn-text">Tweet</span>
+          <span className="tweet-btn-icon">+</span>
         </button>
+        
+        {/* User account info - only shown when logged in */}
+        {isAuthenticated && currentUser && (
+          <div className="sidebar-user-account">
+            <div className="user-avatar">
+              <img 
+                src={currentUser.profilePicture || "/default-avatar.png"} 
+                alt={currentUser.username}
+              />
+            </div>
+            <div className="user-info">
+              <div className="user-name">{currentUser.name || currentUser.username}</div>
+              <div className="user-handle">@{currentUser.username}</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
