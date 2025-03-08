@@ -1,15 +1,28 @@
 import './Auth.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, selectAuth, clearError } from '../../redux/slices/authSlice';
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error, isAuthenticated } = useSelector(selectAuth);
+
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   });
 
-  const [error, setError] = useState('');
+  // If user is already authenticated, redirect to home
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home');
+    }
+    
+    // Clear any existing errors when component mounts
+    dispatch(clearError());
+  }, [isAuthenticated, navigate, dispatch]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,25 +30,26 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Mock API Call (Replace with actual API integration)
-    if (formData.email === 'test@example.com' && formData.password === 'password') {
-      navigate('/home'); // Redirect to home page
-    } else {
-      setError('Invalid email or password');
-    }
+    
+    // Dispatch login action
+    dispatch(loginUser({
+      username: formData.username,
+      password: formData.password
+    }));
   };
 
   return (
     <div className="auth-container">
       <h2>Login to X</h2>
+      
       {error && <p className="error">{error}</p>}
+      
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
+          type="text"
+          name="username"
+          placeholder="Username or Email"
+          value={formData.username}
           onChange={handleChange}
           required
         />
@@ -47,9 +61,17 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Login</button>
+        <button 
+          type="submit" 
+          disabled={loading}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
-      <p>Don't have an account? <span onClick={() => navigate('/signup')}>Sign up</span></p>
+      
+      <p>
+        Don't have an account? <span onClick={() => navigate('/signup')} className="auth-link">Sign up</span>
+      </p>
     </div>
   );
 };
