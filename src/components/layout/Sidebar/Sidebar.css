@@ -1,0 +1,72 @@
+.sidebar {
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  
+  .logo {
+    font-size: 30px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo a {
+    text-decoration: none;
+    color: #1da1f2;
+    font-weight: bold;
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 30px;
+    font-size: 20px;
+    color: #0f1419;
+    text-decoration: none;
+    margin-bottom: 5px;
+    transition: background-color 0.2s;
+  }
+  
+  .menu-item i {
+    margin-right: 15px;
+    font-size: 24px;
+  }
+  
+  .menu-item:hover {
+    background-color: rgba(29, 161, 242, 0.1);
+    color: #1da1f2;
+  }
+  
+  .menu-item.active {
+    font-weight: bold;
+  }
+  
+  .tweet-button {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: bold;
+    padding: 15px 0;
+    width: 90%;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .tweet-button:hover {
+    background-color: #1a91da;
+  }
