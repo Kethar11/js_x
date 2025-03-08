@@ -8,5 +8,5 @@ export const store = configureStore({
     tweets: tweetReducer,
   },
 });
-
+ 
 export default store;
